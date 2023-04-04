@@ -1,6 +1,6 @@
 interface User {
   name: string;
-  firends: string[];
+  friends: string[];
 }
 
 export default User;
