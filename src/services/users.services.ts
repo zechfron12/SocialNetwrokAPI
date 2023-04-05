@@ -5,6 +5,7 @@ import User from "../cotrollers/Users/user.interace";
 import UserNotFoundException from "../exceptions/UserNotFoundExceptions";
 import CreateUserDto from "../cotrollers/Users/createUserDto";
 import { Graph } from "../utils/graph.utils";
+import HttpException from "../exceptions/HttpException";
 
 export default class UsersService {
   public getAllUsers = (request: Request, response: Response) => {
@@ -87,20 +88,23 @@ export default class UsersService {
     friendStringIds = friendStringIds.filter(
       (friendId) => myUser?.friends.indexOf(friendId) === -1
     );
+    try {
+      const existingUsers = await userModel.find({
+        _id: { $in: friendStringIds },
+      });
 
-    const existingUsers = await userModel.find({
-      _id: { $in: friendStringIds },
-    });
-
-    for (const existingUser of existingUsers) {
-      myUser?.friends.push(existingUser._id);
-      if (existingUser.friends.indexOf(myUser?._id) === -1) {
-        existingUser?.friends.push(myUser?._id);
-        await existingUser.save();
+      for (const existingUser of existingUsers) {
+        myUser?.friends.push(existingUser._id);
+        if (existingUser.friends.indexOf(myUser?._id) === -1) {
+          existingUser?.friends.push(myUser?._id);
+          await existingUser.save();
+        }
       }
+      await myUser?.save();
+      response.send(this.userDocumentToUser(myUser));
+    } catch (err) {
+      next(new HttpException(400, "List of friends is not valid"));
     }
-    await myUser?.save();
-    response.send(this.userDocumentToUser(myUser));
   };
 
   public findPathTo = async (

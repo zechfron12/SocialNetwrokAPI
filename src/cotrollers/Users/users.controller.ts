@@ -21,7 +21,7 @@ export default class UsersController implements Controller {
       validateId(),
       this.usersService.getUserById
     );
-    this.router.patch(
+    this.router.put(
       `${this.path}/:id`,
       validateId(),
       validationMiddleware(CreateUserDto, true),
