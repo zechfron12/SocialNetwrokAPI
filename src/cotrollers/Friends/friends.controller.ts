@@ -11,6 +11,6 @@ export default class FriendsController implements Controller {
   }
   intializeRoutes() {
     this.router.post(`${this.path}/add`, this.friendsService.addFriends);
-    this.router.get(`${this.path}/find-path`, this.friendsService.findPathTo);
+    this.router.post(`${this.path}/find-path`, this.friendsService.findPathTo);
   }
 }

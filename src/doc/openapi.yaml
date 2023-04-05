@@ -11,6 +11,7 @@ info:
 
 
     Used technologies:
+
      - Typescript
      - NodeJS
      - Express
@@ -194,7 +195,7 @@ paths:
         404:
           description: User not found
   /friends/find-path:
-    get:
+    post:
       tags:
         - friends
       summary: Finds the shortest chain of friends between 2 users
