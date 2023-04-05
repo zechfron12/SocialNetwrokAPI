@@ -210,3 +210,63 @@ describe("POST /users/:id/add-friends", () => {
       });
   });
 });
+
+describe("GET /users/:id/find-path-to/:friendId", () => {
+  it("Finds shortes path from a user to another", (done) => {
+    request(app)
+      .post("/users")
+      .send({ name: "John" })
+      .expect(200)
+      .end((err, res) => {
+        const john: User = res.body;
+        request(app)
+          .post("/users")
+          .send({ name: "Ana" })
+          .end((err, res) => {
+            const ana: User = res.body;
+            request(app)
+              .post(`/users/${ana.id}/add-friends`)
+              .send([john.id])
+              .expect(200)
+              .end((err, res) => {
+                request(app)
+                  .get(`/users/${ana.id}/find-path-to/${john.id}`)
+                  .expect(200)
+                  .end((err, res) => {
+                    const path: string[] = res.body;
+                    expect(path).toEqual([
+                      { id: ana.id, name: ana.name },
+                      { id: john.id, name: john.name },
+                    ]);
+                    done();
+                  });
+              });
+          });
+      });
+  });
+
+  it("Finds no path from a user to another", (done) => {
+    request(app)
+      .post("/users")
+      .send({ name: "John" })
+      .expect(200)
+      .end((err, res) => {
+        const john: User = res.body;
+        request(app)
+          .post("/users")
+          .send({ name: "Ana" })
+          .end((err, res) => {
+            const ana: User = res.body;
+
+            request(app)
+              .get(`/users/${ana.id}/find-path-to/${john.id}`)
+              .expect(200)
+              .end((err, res) => {
+                const path: string[] = res.body;
+                expect(path).toEqual([]);
+                done();
+              });
+          });
+      });
+  });
+});

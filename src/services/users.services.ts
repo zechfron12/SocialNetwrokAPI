@@ -118,6 +118,7 @@ export default class UsersService {
       const graph = new Graph(users);
       try {
         const path = graph.findPath(request.params.id, request.params.friendId);
+        if (!path) response.send([]);
         response.send(path);
         return users;
       } catch (err) {
