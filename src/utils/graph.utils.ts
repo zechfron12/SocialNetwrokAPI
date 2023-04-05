@@ -10,6 +10,8 @@ export const shortestChainLength = (
   if (!graph[start]) throw new Error("Id not found on first parameter");
   if (!graph[end]) throw new Error("Id not found on second parameter");
 
+  if (start === end) return 0;
+
   const visited = new Set<string>();
   const queue: [string, number][] = [[start, 0]];
 

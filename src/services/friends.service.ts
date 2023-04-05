@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import HttpException from "../exceptions/HttpException";
 import { userDocumentToUser } from "./users.services";
 import { shortestChainLength } from "../utils/graph.utils";
+import { error } from "console";
 
 export default class FriendsService {
   public addFriends = async (
@@ -58,12 +59,23 @@ export default class FriendsService {
         }
         const start = request.body.idBegin;
         const end = request.body.idEnd;
-        const path = shortestChainLength(graph, start, end);
-        console.log(path);
+        try {
+          const steps = shortestChainLength(graph, start, end);
 
-        response
-          .send("The lenght of the shortest path is: " + path)
-          .sendStatus(200);
+          if (steps == -1)
+            response
+              .send({
+                message: "There is no path between the two users",
+                steps,
+              })
+              .sendStatus(200);
+          else
+            response
+              .send({ message: "The lenght of the shortest path is: ", steps })
+              .sendStatus(200);
+        } catch (err) {
+          next(err);
+        }
       });
     } catch (err) {
       next(new HttpException(500, "Internal Server Error"));

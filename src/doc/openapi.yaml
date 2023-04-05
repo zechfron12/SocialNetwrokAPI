@@ -5,16 +5,60 @@ info:
     This is a simple Social Network Api.
     In this API you care create, read, update, and delete users and their friend lists.
 
-
-
     Some useful links:
 
     - [The Social Network API repository](https://github.com/zechfron12/SocialNetwrokAPI)
 
+
+    Used technologies:
+     - Typescript
+     - NodeJS
+     - Express
+     - MongoDB
+     - Jest
+     - Heroku
+     - Swagger
+
+
+    Tehnical Stuff:
+      An user is represented by an id, name and list of friends.
+      The friendship links are representet as a adjency list of a graph. By using this approach it is very easy to keep track of the relation between entyties.
+
+
+    Finding the shortest paths:
+
+
+
+      One of the most common pathing algorithm is dijkstra algorithm, but it is a lot more suited for weighted graphs.
+
+
+      Another approach is doing a DFS. This algorithm could be very efictive if the end node is located in the right direction, but otherwise it can lead to some slow and incorrect solutions.
+
+
+      For this kind of problems I implemented the solution using BFS. This algorithm explores all the neighbors of a node before moving on to the next level of the graph. Because all links have the same impact, a BFS can always stop in the first moment when the destination was found, by merorizing the number of steps taken from previous nodes.
+
+
+    Some relevant test cases:
+      A and B are not friends, and there is no chain of friends between them. In this case, the function should return -1.
+
+
+      A and B are the same user. In this case, the function should return 0.
+
+
+      A and B are direct friends. In this case, the function should return 1.
+
+
+      A and B are not direct friends, but there is a chain of friends between them. In this case, the function should return the length of the chain.
+
+
+      A and B are not connected in the graph. In this case, the function should return -1.
+
+      Testing the functionality of creating, reading, updating and deleting the users.
+
   version: 1.0.0
 servers:
-  - url: http://localhost:8000
   - url: https://immense-spire-09428.herokuapp.com
+  - url: http://localhost:8000
 tags:
   - name: user
     description: Operations about user
@@ -130,62 +174,52 @@ paths:
           description: Succsessful operation
         404:
           description: User not found
-  /users/{id}/add-friends:
+  /friends/add:
     post:
       tags:
-        - users
+        - friends
       summary: Add friends
       description: Add existent to the friendlist of another user and vice versa.
       operationId: addFriend
-      parameters:
-        - name: id
-          in: path
-          description: Id of the user that needs to be deleted
-          required: true
-          schema:
-            type: string
       requestBody:
-        description: Update an existent user from the database.
+        description: Insert id and a list of friends, this will give an error if one the the parsed ids are inexistent.
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: string
+              $ref: "#/components/schemas/AddFriends"
+
       responses:
         200:
           description: Succsessful operation
         404:
           description: User not found
-  /users/{idBegin}/find-path-to/:
+  /friends/find-path:
     get:
       tags:
-        - users
-      summary: Finds the shortes chain of friends between 2 users
+        - friends
+      summary: Finds the shortest chain of friends between 2 users
       description: Using the bfs algorithm, this route return the shortest chain of friends between 2 users.
-      operationId: findPathTo
-      parameters:
-        - name: idBegin
-          in: path
-          description: Id of the user that needs to be deleted
-          required: true
-          schema:
-            type: string
+      operationId: findPath
       requestBody:
-        description: Update an existent user from the database.
+        description: Insert the ids of the 2 users.
         content:
           application/json:
             schema:
-              type: string
+              $ref: "#/components/schemas/FindPathParams"
       responses:
         200:
           description: Successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UpdateUser"
+              type: object
+              properties:
+                name: message
+                type: string
+                example:
+              friends:
+                name: idEnd
+                type: string
         404:
           description: User not found
 
@@ -221,3 +255,19 @@ components:
           type: string
           minLenght: 1
           example: John
+    AddFriends:
+      type: object
+      properties:
+        userId:
+          type: string
+        friends:
+          type: array
+          items:
+            type: string
+    FindPathParams:
+      type: object
+      properties:
+        idBegin:
+          type: string
+        idEnd:
+          type: string

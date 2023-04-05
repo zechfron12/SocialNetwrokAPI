@@ -6,15 +6,25 @@ describe("Graph Utils", () => {
     "2": ["1", "3"],
     "3": ["1", "2", "6"],
     "5": [],
-    "6": ["3"],
+    "6": ["3", "7"],
+    "7": ["6"],
   };
-  it("should return a path between two nodes", () => {
-    const path = shortestChainLength(users, "1", "6");
-    expect(path).toEqual(2);
+  it("A and B are the same user should return 0", () => {
+    const step = shortestChainLength(users, "1", "1");
+    expect(step).toEqual(0);
   });
-  it("should return undefined if no path is found", () => {
-    const path = shortestChainLength(users, "2", "5");
-    expect(path).toEqual(-1);
+
+  it("There is a path between A and B", () => {
+    const step = shortestChainLength(users, "1", "7");
+    expect(step).toEqual(3);
+  });
+  it("A and B are direct friends should return 1", () => {
+    const step = shortestChainLength(users, "1", "2");
+    expect(step).toEqual(1);
+  });
+  it("should return -1 if no path is found", () => {
+    const step = shortestChainLength(users, "2", "5");
+    expect(step).toEqual(-1);
   });
   it("should throw an error if the first id is not found", () => {
     expect(() => shortestChainLength(users, "4", "1")).toThrowError(
