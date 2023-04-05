@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "10"
+  - "18"
 sudo: false
 
 branches:
@@ -16,4 +16,4 @@ deploy:
   skip_cleanup: true
   keep-history: true
   api-key: d0680e56-6c41-46c7-9ee3-5ed76c544dc3
-  app: your_heroku_app_name
+  app: socialnetwrokapi
