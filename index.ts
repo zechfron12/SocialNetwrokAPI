@@ -1,6 +1,9 @@
 import App from "./src/app";
 import UsersController from "./src/cotrollers/Users/users.controller";
+import dotenv from "dotenv";
 
-const app = new App([new UsersController()], 8000);
+dotenv.config();
+
+const app = new App([new UsersController()], process.env?.PORT || "8000");
 
 app.listen();

@@ -2,8 +2,11 @@ import App from "../app";
 import request from "supertest";
 import UsersController from "../cotrollers/Users/users.controller";
 import User from "../cotrollers/Users/user.interace";
+import dotenv from "dotenv";
 
-const app = new App([new UsersController()], 8000).app;
+dotenv.config();
+
+const app = new App([new UsersController()], process.env?.PORT || "8000").app;
 
 describe("GET /users", () => {
   it("should get users succesfuly", (done) => {
