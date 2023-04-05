@@ -1,6 +1,5 @@
 import App from "./src/app";
 import UsersController from "./src/cotrollers/Users/users.controller";
-import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import dotenv from "dotenv";
 import fs from "fs";
