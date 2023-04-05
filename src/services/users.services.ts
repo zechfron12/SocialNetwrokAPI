@@ -31,13 +31,22 @@ export default class UsersService {
     });
   };
 
-  public modifyUser = (
+  public modifyUser = async (
     request: Request,
     response: Response,
     next: NextFunction
   ) => {
     const id = request.params.id;
     const userData: User = request.body;
+    if (userData.friends && userData.friends.length > 0) {
+      try {
+        await userModel.find({
+          _id: { $in: userData.friends },
+        });
+      } catch (err) {
+        next(new HttpException(400, "List of friends is not valid"));
+      }
+    }
     return userModel
       .findByIdAndUpdate(id, userData, { new: true })
       .then((userDoc) => {
@@ -120,7 +129,6 @@ export default class UsersService {
         const path = graph.findPath(request.params.id, request.params.friendId);
         if (!path) response.send([]);
         response.send(path);
-        return users;
       } catch (err) {
         next(err);
       }
