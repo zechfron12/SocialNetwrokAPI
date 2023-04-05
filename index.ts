@@ -1,15 +1,6 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import App from "./src/app";
+import UsersController from "./src/cotrollers/Users/users.controller";
 
-dotenv.config();
+const app = new App([new UsersController()], 8000);
 
-const app: Express = express();
-const port = process.env.PORT;
-
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
-});
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+app.listen();
