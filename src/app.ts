@@ -4,6 +4,7 @@ import * as bodyParser from "body-parser";
 import * as mangoose from "mongoose";
 import Controller from "./interfaces/controller.interface";
 import errorMiddleware from "./middlewares/error.middleware";
+import swaggerUi from "swagger-ui-express";
 
 class App {
   public app: Application;
@@ -12,6 +13,16 @@ class App {
   constructor(controllers: Controller[], port: string) {
     this.app = express();
     this.port = port;
+
+    this.app.use(
+      "/docs",
+      swaggerUi.serve,
+      swaggerUi.setup(undefined, {
+        swaggerOptions: {
+          url: "/swagger.json",
+        },
+      })
+    );
 
     this.connectToTheDatabase();
     this.initializeMiddlewares();

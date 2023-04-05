@@ -15,7 +15,54 @@ export default class UsersController implements Controller {
   }
 
   public intializeRoutes() {
+    /**
+     * @swagger
+     * /users:
+     *      post:
+     *          summary: Get all users
+     *          tags:
+     *              - UsersEndpoint
+     *          description: Get all users from the server.
+     *          requestBody:
+     *              required: true
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          type: object
+     *                          properties:
+     *                              name:
+     *                                  type: string
+     *                                  example: "John"
+     *          responses:
+     *              200:
+     *                  description: OK
+     */
     this.router.get(this.path, this.usersService.getAllUsers);
+
+    /**
+     * @swagger
+     * /users/{id}:
+     *      post:
+     *          summary: Get all users
+     *          tags:
+     *              - UsersEndpoint
+     *          description: Get all users from the server.
+     *
+     *          requestBody:
+     *              required: true
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          type: object
+     *                          properties:
+     *                              name:
+     *                                  type: string
+     *                                  example: "John"
+     *          responses:
+     *              200:
+     *                  description: OK
+     *
+     */
     this.router.get(
       `${this.path}/:id`,
       validateId(),
