@@ -1,7 +1,13 @@
 language: node_js
 node_js:
-  - 18
+  - "18"
 sudo: false
+
+script:
+  - echo 'Installing Dependencies'
+  - npm install
+  - echo 'Running tests'
+  - npm run test
 
 branches:
   only:
