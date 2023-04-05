@@ -4,6 +4,7 @@ import validationMiddleware from "../../middlewares/validation.middleware";
 import CreateUserDto from "./createUserDto";
 import UsersService from "../../services/users.services";
 import { Router } from "express";
+import validateId from "../../middlewares/id.middleware";
 
 export default class UsersController implements Controller {
   public path = "/users";
@@ -15,13 +16,22 @@ export default class UsersController implements Controller {
 
   public intializeRoutes() {
     this.router.get(this.path, this.usersService.getAllUsers);
-    this.router.get(`${this.path}/:id`, this.usersService.getUserById);
+    this.router.get(
+      `${this.path}/:id`,
+      validateId(),
+      this.usersService.getUserById
+    );
     this.router.patch(
       `${this.path}/:id`,
+      validateId(),
       validationMiddleware(CreateUserDto, true),
       this.usersService.modifyUser
     );
-    this.router.delete(`${this.path}/:id`, this.usersService.deleteUser);
+    this.router.delete(
+      `${this.path}/:id`,
+      validateId(),
+      this.usersService.deleteUser
+    );
     this.router.post(
       this.path,
       validationMiddleware(CreateUserDto),
@@ -29,10 +39,12 @@ export default class UsersController implements Controller {
     );
     this.router.post(
       `${this.path}/:id/add-friends`,
+      validateId(),
       this.usersService.addFriends
     );
     this.router.get(
       `${this.path}/:id/find-path-to/:friendId`,
+      validateId(),
       this.usersService.findPathTo
     );
   }

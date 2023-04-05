@@ -112,9 +112,13 @@ export default class UsersService {
       const users = userDocs.map((userDoc) => this.userDocumentToUser(userDoc));
 
       const graph = new Graph(users);
-      const path = graph.findPath(request.params.id, request.params.friendId);
-      response.send(path);
-      return users;
+      try {
+        const path = graph.findPath(request.params.id, request.params.friendId);
+        response.send(path);
+        return users;
+      } catch (err) {
+        next(err);
+      }
     });
   };
 

@@ -19,8 +19,6 @@ export class Graph {
         this.addConnection(user.id, friend);
       }
     }
-
-    console.log(this.users);
   }
 
   addNode(id: string, name: string) {
@@ -44,7 +42,9 @@ export class Graph {
     path: { id: string; name: string }[] = []
   ): { id: string; name: string }[] | undefined {
     const startNode = this.nodes.find((node) => node.id === startId);
-    if (!startNode) throw new Error("Node not found");
+    const endNode = this.nodes.find((node) => node.id === endId);
+    if (!startNode) throw new Error("Id not found on first parameter");
+    if (!endNode) throw new Error("Id not found on second parameter");
     else {
       startNode.visited = true;
       path.push({ id: startNode.id, name: startNode.name });
