@@ -7,45 +7,47 @@ export type Node = {
   visited: boolean;
 };
 
-export const userToNode = (user: User): Node => ({
-  id: user.id,
-  name: user.name,
-  neighbors: user.friends,
-  visited: false,
-});
-
 export class Graph {
   nodes: Node[] = [];
   constructor(private users: User[]) {
     for (const user of users) {
       this.addNode(user.id, user.name);
+    }
+
+    for (const user of users) {
       for (const friend of user.friends) {
         this.addConnection(user.id, friend);
       }
     }
+
+    console.log(this.users);
   }
 
   addNode(id: string, name: string) {
-    const newNode: Node = { id, neighbors: [], name, visited: false };
+    const newNode: Node = { id, name, neighbors: [], visited: false };
     this.nodes.push(newNode);
     return newNode;
   }
 
-  addConnection(node1: Node, node2: Node) {
-    node1.neighbors.push(node2.id);
-    node2.neighbors.push(node1);
+  addConnection(id1: string, id2: string) {
+    const node1 = this.nodes.find((node) => node.id === id1);
+    const node2 = this.nodes.find((node) => node.id === id2);
+    if (node1 && node2) {
+      node1.neighbors.push(id2);
+      node2.neighbors.push(id1);
+    }
   }
 
   findPath(
     startId: string,
     endId: string,
-    path: string[] = []
-  ): string[] | undefined {
+    path: { id: string; name: string }[] = []
+  ): { id: string; name: string }[] | undefined {
     const startNode = this.nodes.find((node) => node.id === startId);
     if (!startNode) throw new Error("Node not found");
     else {
       startNode.visited = true;
-      path.push(startId);
+      path.push({ id: startNode.id, name: startNode.name });
       if (startId === endId) return path;
       else {
         for (const neighbor of startNode.neighbors) {

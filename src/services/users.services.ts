@@ -85,8 +85,7 @@ export default class UsersService {
     let friendStringIds: string[] = request.body;
     const myUser = await userModel.findById(id);
     friendStringIds = friendStringIds.filter(
-      (friendId) =>
-        myUser?.friends.find((friend) => friend.id === friendId) !== undefined
+      (friendId) => myUser?.friends.indexOf(friendId) === -1
     );
 
     const existingUsers = await userModel.find({
@@ -96,10 +95,7 @@ export default class UsersService {
     for (const existingUser of existingUsers) {
       myUser?.friends.push(existingUser._id);
       if (existingUser.friends.indexOf(myUser?._id) === -1) {
-        existingUser?.friends.push({
-          id: myUser?._id,
-          name: myUser?.name || "",
-        });
+        existingUser?.friends.push(myUser?._id);
         await existingUser.save();
       }
     }
