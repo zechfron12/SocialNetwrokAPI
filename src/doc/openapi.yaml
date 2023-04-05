@@ -157,7 +157,7 @@ paths:
           description: Succsessful operation
         404:
           description: User not found
-  /users/{idBegin}/find-path-to/{idEnd}:
+  /users/{idBegin}/find-path-to/:
     get:
       tags:
         - users
@@ -171,12 +171,12 @@ paths:
           required: true
           schema:
             type: string
-        - name: idEnd
-          in: path
-          description: Id of the user that needs to be deleted
-          required: true
-          schema:
-            type: string
+      requestBody:
+        description: Update an existent user from the database.
+        content:
+          application/json:
+            schema:
+              type: string
       responses:
         200:
           description: Successful operation
