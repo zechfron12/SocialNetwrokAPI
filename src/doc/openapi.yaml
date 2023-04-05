@@ -117,8 +117,9 @@ paths:
           in: path
           description: "The id of the user"
           required: true
-          schema:
-            type: string
+          type: string
+          example: 642d82d0ac6eb5437a326bdf
+
       responses:
         "200":
           description: successful operation
@@ -143,6 +144,8 @@ paths:
           required: true
           schema:
             type: string
+            example: 642d82d0ac6eb5437a326bdf
+
       requestBody:
         description: Update user object
         content:
@@ -168,8 +171,8 @@ paths:
           in: path
           description: Id of the user that needs to be deleted
           required: true
-          schema:
-            type: string
+          type: string
+          example: 642d82d0ac6eb5437a326bdf
       responses:
         200:
           description: Succsessful operation
@@ -217,10 +220,10 @@ paths:
               properties:
                 name: message
                 type: string
-                example:
               friends:
-                name: idEnd
+                name: steps
                 type: string
+
         404:
           description: User not found
 
@@ -231,44 +234,63 @@ components:
       properties:
         name:
           type: string
-          example: John
+          example:
+            - John
         friends:
           type: array
           items:
             type: string
+            example:
+              - 642dab4c9323867a38991ea5
+              - 642d693d2f79545b731cd802
     User:
       type: object
       properties:
         id:
           type: string;
           example:
+            - 642d5a99de86dd027b6709e6
         name:
           type: string
-          example: John
+          example:
+            - John
         friends:
           type: array
           items:
             type: string
+          example:
+            - 642dab4c9323867a38991ea5
+            - 642d693d2f79545b731cd802
     CreateUser:
       type: object
       properties:
         name:
           type: string
           minLenght: 1
-          example: John
+          example:
+            - John
     AddFriends:
       type: object
       properties:
         userId:
           type: string
+          example:
+            - 642d5a99de86dd027b6709e6
         friends:
           type: array
           items:
             type: string
+            example:
+              - 642d693d2f79545b731cd7fe
+              - 642d693d2f79545b731cd802
     FindPathParams:
       type: object
       properties:
         idBegin:
           type: string
+          example:
+            - 642d5a99de86dd027b6709e6
         idEnd:
           type: string
+          example:
+            - 642d5b94de86dd027b6709f1
